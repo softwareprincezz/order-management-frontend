@@ -24,16 +24,16 @@ function AddEditOrder() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Modal agregar producto
+  // Modal add product
   const [showAddModal, setShowAddModal] = useState(false);
   const [addForm, setAddForm] = useState({ productId: "", quantity: 1 });
 
-  // Modal editar producto
+  // Modal edit product
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [editQty, setEditQty] = useState(1);
 
-  // Auto-calculados
+  // Auto-calculate
   const today = new Date().toISOString().split("T")[0];
   const productsCount = orderItems.reduce((sum, item) => sum + Number(item.quantity), 0);
   const finalPrice = orderItems.reduce((sum, item) => sum + Number(item.quantity) * Number(item.unitPrice), 0);
@@ -48,7 +48,7 @@ function AddEditOrder() {
       const data = await getProducts();
       setAvailableProducts(data);
     } catch (err) {
-      console.error("Error cargando productos:", err);
+      console.error("Error loading products:", err);
     }
   };
 
@@ -72,7 +72,7 @@ function AddEditOrder() {
         );
       }
     } catch (err) {
-      setError("Error al cargar la orden: " + err.message);
+      setError("Error loading order: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -91,7 +91,7 @@ function AddEditOrder() {
 
   const confirmAddProduct = () => {
     if (!addForm.productId || Number(addForm.quantity) < 1) {
-      alert("Selecciona un producto y una cantidad válida.");
+      alert("Please select a product and a valid quantity.");
       return;
     }
     const product = availableProducts.find((p) => p.id === Number(addForm.productId));
@@ -120,7 +120,7 @@ function AddEditOrder() {
     setShowAddModal(false);
   };
 
-  // Edit profuct modal
+  // Edit product modal
   const openEditModal = (item) => {
     setEditingItem(item);
     setEditQty(item.quantity);
@@ -129,7 +129,7 @@ function AddEditOrder() {
 
   const confirmEditProduct = () => {
     if (Number(editQty) < 1) {
-      alert("La cantidad debe ser al menos 1.");
+      alert("Quantity must be at least 1.");
       return;
     }
     setOrderItems((prev) =>
@@ -145,7 +145,7 @@ function AddEditOrder() {
 
   // Remove product
   const removeItem = (productId) => {
-    if (window.confirm("¿Estás seguro que quieres quitar este producto de la orden?")) {
+    if (window.confirm("Are you sure you want to remove this product from the order?")) {
       setOrderItems((prev) => prev.filter((item) => item.productId !== productId));
     }
   };
@@ -154,7 +154,7 @@ function AddEditOrder() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.orderNumber.trim()) {
-      alert("El número de orden es requerido.");
+      alert("Order number is required.");
       return;
     }
     try {
@@ -173,14 +173,14 @@ function AddEditOrder() {
 
       if (isEditMode) {
         await updateOrder(id, orderData);
-        alert("✅ Orden actualizada!");
+        alert("✅ Order updated!");
       } else {
         await createOrder(orderData);
-        alert("✅ Orden creada!");
+        alert("✅ Order created!");
       }
       navigate("/my-orders");
     } catch (err) {
-      setError("Error al guardar: " + err.message);
+      setError("Error saving order: " + err.message);
       console.error(err);
     } finally {
       setLoading(false);
@@ -191,24 +191,21 @@ function AddEditOrder() {
     <div style={pageContainer}>
       <div style={cardStyle}>
         <h1 style={{ marginBottom: "25px", textAlign: "center" }}>
-          {isEditMode ? "Editar Orden" : "Agregar Orden"}
+          {isEditMode ? "Edit Order" : "Add Order"}
         </h1>
 
-        {error && (
-          <div style={errorBox}>{error}</div>
-        )}
-
-        {loading && <p>Cargando...</p>}
+        {error && <div style={errorBox}>{error}</div>}
+        {loading && <p>Loading...</p>}
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
 
-          {/*oder number*/}
+          {/* Order Number */}
           <div style={fieldGroup}>
-            <label style={labelStyle}>Número de Orden</label>
+            <label style={labelStyle}>Order Number</label>
             <input
               type="text"
               name="orderNumber"
-              placeholder="Ej: ORD-001"
+              placeholder="e.g. ORD-001"
               value={formData.orderNumber}
               onChange={handleChange}
               required
@@ -216,9 +213,9 @@ function AddEditOrder() {
             />
           </div>
 
-          {/*date*/}
+          {/* Date */}
           <div style={fieldGroup}>
-            <label style={labelStyle}>Fecha</label>
+            <label style={labelStyle}>Date</label>
             <input
               type="date"
               value={today}
@@ -227,9 +224,9 @@ function AddEditOrder() {
             />
           </div>
 
-          {/*producst quantity*/}
+          {/* Products quantity */}
           <div style={fieldGroup}>
-            <label style={labelStyle}>Cantidad de Productos</label>
+            <label style={labelStyle}># Products</label>
             <input
               type="number"
               value={productsCount}
@@ -238,9 +235,9 @@ function AddEditOrder() {
             />
           </div>
 
-          {/*final price*/}
+          {/* Final price */}
           <div style={fieldGroup}>
-            <label style={labelStyle}>Precio Final</label>
+            <label style={labelStyle}>Final Price</label>
             <input
               type="text"
               value={`$${finalPrice.toFixed(2)}`}
@@ -249,9 +246,9 @@ function AddEditOrder() {
             />
           </div>
 
-          {/*Status*/}
+          {/* Status */}
           <div style={fieldGroup}>
-            <label style={labelStyle}>Estado</label>
+            <label style={labelStyle}>Status</label>
             <select
               name="status"
               value={formData.status}
@@ -264,27 +261,27 @@ function AddEditOrder() {
             </select>
           </div>
 
-          {/*products table*/}
+          {/* Products table */}
           <div style={{ marginTop: "10px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
-              <label style={{ ...labelStyle, fontSize: "14px" }}>Productos en la Orden</label>
+              <label style={{ ...labelStyle, fontSize: "14px" }}>Order Products</label>
               <button type="button" onClick={openAddModal} style={addProductBtn}>
-                ➕ Agregar Producto
+                ➕ Add Product
               </button>
             </div>
 
             {orderItems.length === 0 ? (
-              <div style={emptyProducts}>No hay productos agregados aún.</div>
+              <div style={emptyProducts}>No products added yet.</div>
             ) : (
               <table style={tableStyle}>
                 <thead>
                   <tr>
                     <th style={thStyle}>ID</th>
-                    <th style={thStyle}>Nombre</th>
-                    <th style={thStyle}>Precio Unit.</th>
+                    <th style={thStyle}>Name</th>
+                    <th style={thStyle}>Unit Price</th>
                     <th style={thStyle}>Qty</th>
-                    <th style={thStyle}>Total</th>
-                    <th style={thStyle}>Opciones</th>
+                    <th style={thStyle}>Total Price</th>
+                    <th style={thStyle}>Options</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -310,32 +307,32 @@ function AddEditOrder() {
             )}
           </div>
 
-          {/*btns*/}
+          {/* Buttons */}
           <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
             <button type="submit" style={saveBtn} disabled={loading}>
-              {loading ? "Guardando..." : "💾 Guardar"}
+              {loading ? "Saving..." : "💾 Save"}
             </button>
             <button type="button" onClick={() => navigate("/my-orders")} style={cancelBtn} disabled={loading}>
-              ⬅ Atrás
+              ⬅ Back
             </button>
           </div>
         </form>
       </div>
 
-      {/*modal add product*/}
+      {/* Modal add product */}
       {showAddModal && (
         <div style={modalOverlay}>
           <div style={modalCard}>
-            <h2 style={{ marginBottom: "20px" }}>Agregar Producto</h2>
+            <h2 style={{ marginBottom: "20px" }}>Add Product</h2>
 
             <div style={fieldGroup}>
-              <label style={labelStyle}>Producto</label>
+              <label style={labelStyle}>Product</label>
               <select
                 value={addForm.productId}
                 onChange={(e) => setAddForm({ ...addForm, productId: e.target.value })}
                 style={inputStyle}
               >
-                <option value="">-- Selecciona un producto --</option>
+                <option value="">-- Select a product --</option>
                 {availableProducts.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.name} — ${Number(p.unitPrice).toFixed(2)}
@@ -345,7 +342,7 @@ function AddEditOrder() {
             </div>
 
             <div style={{ ...fieldGroup, marginTop: "14px" }}>
-              <label style={labelStyle}>Cantidad</label>
+              <label style={labelStyle}>Quantity</label>
               <input
                 type="number"
                 min="1"
@@ -356,21 +353,21 @@ function AddEditOrder() {
             </div>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "24px" }}>
-              <button onClick={confirmAddProduct} style={saveBtn}>✅ Confirmar</button>
-              <button onClick={() => setShowAddModal(false)} style={cancelBtn}>Cancelar</button>
+              <button onClick={confirmAddProduct} style={saveBtn}>✅ Confirm</button>
+              <button onClick={() => setShowAddModal(false)} style={cancelBtn}>Cancel</button>
             </div>
           </div>
         </div>
       )}
 
-      {/*modal edi0t product*/}
+      {/* Modal edit product */}
       {showEditModal && editingItem && (
         <div style={modalOverlay}>
           <div style={modalCard}>
-            <h2 style={{ marginBottom: "20px" }}>Editar Producto</h2>
+            <h2 style={{ marginBottom: "20px" }}>Edit Product</h2>
 
             <div style={fieldGroup}>
-              <label style={labelStyle}>Producto</label>
+              <label style={labelStyle}>Product</label>
               <input
                 type="text"
                 value={editingItem.name}
@@ -380,7 +377,7 @@ function AddEditOrder() {
             </div>
 
             <div style={{ ...fieldGroup, marginTop: "14px" }}>
-              <label style={labelStyle}>Cantidad</label>
+              <label style={labelStyle}>Quantity</label>
               <input
                 type="number"
                 min="1"
@@ -391,8 +388,8 @@ function AddEditOrder() {
             </div>
 
             <div style={{ display: "flex", gap: "10px", marginTop: "24px" }}>
-              <button onClick={confirmEditProduct} style={saveBtn}>✅ Confirmar</button>
-              <button onClick={() => setShowEditModal(false)} style={cancelBtn}>Cancelar</button>
+              <button onClick={confirmEditProduct} style={saveBtn}>✅ Confirm</button>
+              <button onClick={() => setShowEditModal(false)} style={cancelBtn}>Cancel</button>
             </div>
           </div>
         </div>
