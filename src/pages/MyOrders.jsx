@@ -27,7 +27,7 @@ function MyOrders() {
       setOrders(data);
       setError(null);
     } catch (err) {
-      setError(err.message || "Error al cargar órdenes");
+      setError(err.message || "Error loading orders");
       console.error(err);
     } finally {
       setLoading(false);
@@ -55,12 +55,12 @@ function MyOrders() {
   }, []);
 
   const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro que quieres eliminar esta orden?")) {
+    if (window.confirm("Are you sure you want to delete this order?")) {
       try {
         await deleteOrder(id);
         await loadOrders();
       } catch (err) {
-        alert("Error al eliminar la orden: " + err.message);
+        alert("Error deleting order: " + err.message);
       }
     }
   };
@@ -87,7 +87,7 @@ function MyOrders() {
         color: "#111",
       }}
     >
-      <h1 style={{ marginBottom: "20px" }}>Mis Órdenes</h1>
+      <h1 style={{ marginBottom: "20px" }}>My Orders</h1>
 
       {error && (
         <div style={{ padding: "10px", background: "#ffcccc", borderRadius: "8px", marginBottom: "20px", color: "#c00" }}>
@@ -95,9 +95,9 @@ function MyOrders() {
         </div>
       )}
 
-      {loading && <p>Cargando órdenes...</p>}
+      {loading && <p>Loading orders...</p>}
 
-      {/*add order button*/}
+      {/* Add order button */}
       <button
         onClick={() => navigate("/add-order")}
         style={{
@@ -111,7 +111,7 @@ function MyOrders() {
           color: "#313131",
         }}
       >
-        ➕ Agregar Orden
+        ➕ Add Order
       </button>
 
       <button
@@ -128,7 +128,7 @@ function MyOrders() {
           color: "#313131",
         }}
       >
-        📦 Productos
+        📦 Products
       </button>
 
       {!loading && (
@@ -173,7 +173,7 @@ function MyOrders() {
                   <td style={tdStyle}>{order.productsCount}</td>
                   <td style={tdStyle}>${order.finalPrice}</td>
 
-                  {/*status*/}
+                  {/* Status */}
                   <td style={tdStyle}>
                     <div
                       ref={openStatusId === order.id ? dropdownRef : null}
@@ -186,7 +186,7 @@ function MyOrders() {
                             openStatusId === order.id ? null : order.id
                           );
                         }}
-                        title={isCompleted ? "Las órdenes completadas no se pueden modificar" : ""}
+                        title={isCompleted ? "Completed orders cannot be modified" : ""}
                         style={{
                           padding: "6px 12px",
                           borderRadius: "20px",
@@ -244,7 +244,7 @@ function MyOrders() {
                                     );
                                     setOpenStatusId(null);
                                   } catch (err) {
-                                    alert("Error al actualizar estado: " + err.message);
+                                    alert("Error updating status: " + err.message);
                                   }
                                 }}
                                 style={{
@@ -268,12 +268,12 @@ function MyOrders() {
                     </div>
                   </td>
 
-                  {/*options edit and delete*/}
+                  {/* Options: edit and delete */}
                   <td style={tdStyle}>
                     <button
                       onClick={() => navigate(`/add-order/${order.id}`)}
                       disabled={isCompleted}
-                      title={isCompleted ? "Las órdenes completadas no se pueden editar" : ""}
+                      title={isCompleted ? "Completed orders cannot be edited" : ""}
                       style={{
                         ...editBtn,
                         opacity: isCompleted ? 0.4 : 1,
