@@ -28,7 +28,7 @@ function Products() {
       setProducts(data);
       setError(null);
     } catch (err) {
-      setError(err.message || "Error al cargar productos");
+      setError(err.message || "Error loading products");
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ function Products() {
 
   const handleSave = async () => {
     if (!formData.name.trim() || formData.unitPrice === "") {
-      alert("Por favor completa todos los campos.");
+      alert("Please fill in all fields.");
       return;
     }
 
@@ -77,25 +77,25 @@ function Products() {
           )
         );
       } else {
-        const result = await createProduct(payload);
+        await createProduct(payload);
         await loadProducts();
       }
 
       closeModal();
     } catch (err) {
-      alert("Error al guardar producto: " + err.message);
+      alert("Error saving product: " + err.message);
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("¿Estás seguro que quieres eliminar este producto?")) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await deleteProduct(id);
         setProducts((prev) => prev.filter((p) => p.id !== id));
       } catch (err) {
-        alert("Error al eliminar producto: " + err.message);
+        alert("Error deleting product: " + err.message);
       }
     }
   };
@@ -103,9 +103,9 @@ function Products() {
   return (
     <div style={{ padding: "40px", background: "#f8f8f8", minHeight: "100vh", color: "#111" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-        <h1>Productos</h1>
+        <h1>Products</h1>
         <button onClick={() => navigate("/my-orders")} style={backBtn}>
-          ⬅ Mis Órdenes
+          ⬅ My Orders
         </button>
       </div>
 
@@ -115,10 +115,10 @@ function Products() {
         </div>
       )}
 
-      {loading && <p>Cargando productos...</p>}
+      {loading && <p>Loading products...</p>}
 
       <button onClick={openCreateModal} style={addBtn}>
-        ➕ Agregar Producto
+        ➕ Add Product
       </button>
 
       {!loading && (
@@ -126,9 +126,9 @@ function Products() {
           <thead>
             <tr>
               <th style={thStyle}>ID</th>
-              <th style={thStyle}>Nombre</th>
-              <th style={thStyle}>Precio Unitario</th>
-              <th style={thStyle}>Opciones</th>
+              <th style={thStyle}>Name</th>
+              <th style={thStyle}>Unit Price</th>
+              <th style={thStyle}>Options</th>
             </tr>
           </thead>
           <tbody>
@@ -151,19 +151,19 @@ function Products() {
         </table>
       )}
 
-      {/*mpdal edit*/}
+      {/* Modal add/edit product */}
       {showModal && (
         <div style={modalOverlay}>
           <div style={modalCard}>
             <h2 style={{ marginBottom: "20px" }}>
-              {editingProduct ? "Editar Producto" : "Nuevo Producto"}
+              {editingProduct ? "Edit Product" : "New Product"}
             </h2>
 
             <div style={fieldGroup}>
-              <label style={labelStyle}>Nombre</label>
+              <label style={labelStyle}>Name</label>
               <input
                 type="text"
-                placeholder="Ej: Laptop"
+                placeholder="e.g. Laptop"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 style={inputStyle}
@@ -171,10 +171,10 @@ function Products() {
             </div>
 
             <div style={{ ...fieldGroup, marginTop: "14px" }}>
-              <label style={labelStyle}>Precio Unitario</label>
+              <label style={labelStyle}>Unit Price</label>
               <input
                 type="number"
-                placeholder="Ej: 99.99"
+                placeholder="e.g. 99.99"
                 value={formData.unitPrice}
                 onChange={(e) => setFormData({ ...formData, unitPrice: e.target.value })}
                 style={inputStyle}
@@ -183,10 +183,10 @@ function Products() {
 
             <div style={{ display: "flex", gap: "10px", marginTop: "24px" }}>
               <button onClick={handleSave} disabled={saving} style={saveBtn}>
-                {saving ? "Guardando..." : "💾 Guardar"}
+                {saving ? "Saving..." : "💾 Save"}
               </button>
               <button onClick={closeModal} disabled={saving} style={cancelBtn}>
-                Cancelar
+                Cancel
               </button>
             </div>
           </div>
